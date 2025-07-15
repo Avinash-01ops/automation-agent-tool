@@ -70,6 +70,54 @@ document.addEventListener("keydown", (e) => {
 });
 
 // Handle project form submission
+// document.getElementById("projectForm").addEventListener("submit", function (e) {
+//   e.preventDefault();
+//   const name = document.getElementById("projectName").value.trim();
+//   const desc = document.getElementById("projectDesc").value.trim();
+//   clearError("projectName");
+//   clearError("projectDesc");
+
+//   let hasError = false;
+//   if (!name) {
+//     showError("projectName", "Project name is required.");
+//     hasError = true;
+//   }
+//   if (!desc) {
+//     showError("projectDesc", "Description is required.");
+//     hasError = true;
+//   }
+//   if (hasError) return;
+
+//   // Simulate loading (for future async save)
+//   setLoading(true);
+//   setTimeout(() => {
+//     setLoading(false);
+//     const project = {
+//       id: generateID(),
+//       name,
+//       desc
+//     };
+
+//     // Render project tile
+//     const tile = document.createElement("div");
+//     tile.className = "project-tile";
+//     tile.innerHTML = `
+//       <strong>${project.name}</strong>
+//       <p>${project.desc}</p>
+//       <div class="btn-row">
+//         <button onclick="openProject('${project.id}', '${project.name}')" class="btn btn-icon"><i class='fas fa-folder-open'></i> Edit</button>
+//         <button onclick="this.parentElement.parentElement.remove()" class="btn btn-icon"><i class='fas fa-trash'></i> Delete</button>
+//       </div>
+//     `;
+
+//     const container = document.getElementById("projectsContainer");
+//     container.classList.remove("empty");
+//     container.innerHTML = '';
+//     container.appendChild(tile);
+//     document.getElementById("projectModal").classList.add("hidden");
+//   }, 600);
+// });
+
 document.getElementById("projectForm").addEventListener("submit", function (e) {
   e.preventDefault();
   const name = document.getElementById("projectName").value.trim();
@@ -88,35 +136,40 @@ document.getElementById("projectForm").addEventListener("submit", function (e) {
   }
   if (hasError) return;
 
-  // Simulate loading (for future async save)
   setLoading(true);
   setTimeout(() => {
     setLoading(false);
     const project = {
-      id: generateID(),
+      id: "proj_" + Date.now(), // A more unique ID
       name,
       desc
     };
 
-    // Render project tile
+    // Create the project tile element with new structure
     const tile = document.createElement("div");
     tile.className = "project-tile";
     tile.innerHTML = `
-      <strong>${project.name}</strong>
+      <h3>${project.name}</h3>
       <p>${project.desc}</p>
       <div class="btn-row">
-        <button onclick="openProject('${project.id}', '${project.name}')" class="btn btn-icon"><i class='fas fa-folder-open'></i> Edit</button>
-        <button onclick="this.parentElement.parentElement.remove()" class="btn btn-icon"><i class='fas fa-trash'></i> Delete</button>
+        <button onclick="openProject('${project.id}', '${project.name}')" class="btn"><i class='fas fa-folder-open'></i> Edit</button>
+        <button onclick="this.closest('.project-tile').remove()" class="btn btn-delete"><i class='fas fa-trash'></i> Delete</button>
       </div>
     `;
 
     const container = document.getElementById("projectsContainer");
-    container.classList.remove("empty");
-    container.innerHTML = '';
-    container.appendChild(tile);
+
+    // Correctly add the new project without deleting old ones
+    if (container.classList.contains("empty")) {
+      container.innerHTML = ''; // Clear the placeholder message
+      container.classList.remove("empty");
+    }
+    container.appendChild(tile); // Append the new project card
+
     document.getElementById("projectModal").classList.add("hidden");
   }, 600);
 });
+
 
 // Open project: save name to localStorage and go to project.html
 function openProject(id, name) {

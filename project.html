@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,51 +8,62 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
   <header class="app-header">
     <h1 id="projectTitle">Project Title</h1>
   </header>
 
   <main class="main-content">
-    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; margin-bottom: 2.5rem;">
-      <div style="flex: 1; min-width: 320px;">
-        <label for="urlInput" style="font-weight: 600; font-size: 1.08rem; margin-bottom: 0.4rem; display: block; color: #1976d2;">Add URL</label>
+    <div class="bento-grid">
+      <div id="url-box" class="bento-box">
+        <h2><i class="fas fa-link"></i> Target URL</h2>
         <div style="display: flex; gap: 0.7rem; align-items: center;">
-          <input type="text" id="urlInput" placeholder="Enter a URL" style="flex: 1; font-size: 1.08rem; padding: 0.7rem 1rem; border-radius: 6px; border: 1.5px solid #bcdffb;">
-          <button id="getXpathsBtn" class="btn btn-icon btn-success" style="font-size: 1.08rem; padding: 0.7rem 1.5rem; background: linear-gradient(90deg,#43a047 0%,#2196f3 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600; box-shadow: 0 2px 8px rgba(33,150,243,0.08);"><i class="fas fa-code"></i> Get XPaths</button>
+          <input type="text" id="urlInput" placeholder="Enter a URL to scrape"
+            style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;">
+          <button id="getXpathsBtn" class="btn btn-success"><i class="fas fa-code"></i> Get XPaths</button>
         </div>
+        <div id="urlInputError" class="input-error" aria-live="polite"></div>
       </div>
-      <div style="min-width: 340px; max-width: 400px; background: #f7fafd; border: 1.5px solid #e3f2fd; border-radius: 10px; padding: 1.2rem 1.2rem 1rem 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; align-items: flex-end; box-shadow: 0 2px 8px rgba(33,150,243,0.06);">
-        <div style="width: 100%; display: flex; gap: 0.7rem;">
-          <input type="text" id="username" placeholder="Username (optional)" style="flex: 1; font-size: 1.02rem; padding: 0.6rem 1rem; border-radius: 6px; border: 1px solid #bcdffb;">
-          <input type="password" id="password" placeholder="Password (optional)" style="flex: 1; font-size: 1.02rem; padding: 0.6rem 1rem; border-radius: 6px; border: 1px solid #bcdffb;">
-        </div>
-        <button id="saveCredsBtn" class="btn btn-icon btn-success" style="font-size: 1.02rem; padding: 0.6rem 1.5rem; background: linear-gradient(90deg,#43a047 0%,#2196f3 100%); color: #fff; border: none; border-radius: 6px; font-weight: 600; box-shadow: 0 2px 8px rgba(33,150,243,0.08);"><i class="fas fa-lock"></i> Save</button>
-      </div>
-    </div>
 
-    <section class="xpath-section" id="xpathSection" style="display: none;">
-      <h2>List of XPaths</h2>
-      <div class="xpath-card" style="padding: 1.5rem;">
-        <div id="xpathTabs" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-          <button class="btn" id="tabTextFields" style="background: #e8f5e9;">Text Fields</button>
-          <button class="btn" id="tabInputFields" style="background: #e3f2fd;">Input Fields</button>
-          <button class="btn" id="tabButtons" style="background: #fff3e0;">Buttons</button>
+      <div id="creds-box" class="bento-box">
+        <h4><i class="fas fa-shield-alt"></i> Credentials (Optional)</h4>
+        <div style="display: flex; gap: 0.7rem; align-items: center;">
+          <input type="text" id="username" placeholder="Username"
+            style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;">
+          <input type="password" id="password" placeholder="Password"
+            style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;">
+          <button id="saveCredsBtn" class="btn"><i class="fas fa-lock"></i> Save</button>
+        </div>
+        <div id="usernameError" class="input-error" aria-live="polite"></div>
+        <div id="passwordError" class="input-error" aria-live="polite"></div>
+      </div>
+
+      <div id="xpaths-box" class="bento-box full-width" style="display: none;">
+        <h2><i class="fas fa-stream"></i> Extracted XPaths</h2>
+        <div id="xpathTabs">
+          <button class="btn active" id="tabTextFields">Text Fields</button>
+          <button class="btn" id="tabInputFields">Input Fields</button>
+          <button class="btn" id="tabButtons">Buttons</button>
         </div>
         <div id="xpathLists">
-          <ul id="textFields" style="display: none;"></ul>
+          <ul id="textFields"></ul>
           <ul id="inputFields" style="display: none;"></ul>
           <ul id="buttons" style="display: none;"></ul>
         </div>
       </div>
-      <div id="logOutput" style="font-family: monospace; background: #000000; padding: 1rem; margin-top: 1rem; border-radius: 6px; max-height: 300px; overflow: auto;">
-        <strong style="color: #ffffff;">Console Logs</strong>
-        <pre id="logContent" style="white-space: pre-wrap; color: #ffffff;"></pre>
+
+      <div id="logs-box" class="bento-box full-width" style="display: none;">
+        <h2><i class="fas fa-terminal"></i> Console Logs</h2>
+        <div id="logOutput">
+          <pre id="logContent"></pre>
+        </div>
       </div>
-    </section>
+    </div>
   </main>
 
   <script src="js/utils.js"></script>
   <script src="js/project.js"></script>
 </body>
+
 </html>
