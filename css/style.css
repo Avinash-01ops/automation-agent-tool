@@ -43,6 +43,13 @@ body {
   margin: 0 auto;
 }
 
+.main-content .header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .heading-button {
   display: flex;
   justify-content: space-between;
