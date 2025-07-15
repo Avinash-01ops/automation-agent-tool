@@ -7,20 +7,180 @@
   <title>XPath Collector</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    /* Specific form styles for this page */
+    .main-content form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .main-content label {
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+      color: var(--subtle-text, #666);
+      font-weight: 600;
+    }
+
+    .main-content input[type="text"],
+    .main-content input[type="password"],
+    .main-content textarea {
+      padding: 0.8rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid var(--border-color, #ddd);
+      border-radius: var(--border-radius, 4px);
+      width: 100%;
+      background: #fdfdfd;
+      transition: border 0.2s, box-shadow 0.2s;
+      box-sizing: border-box;
+    }
+
+    .main-content input[type="text"]:focus,
+    .main-content input[type="password"]:focus,
+    .main-content textarea:focus {
+      outline: none;
+      border-color: var(--primary-color, #4285f4);
+      box-shadow: 0 0 0 3px var(--shadow-color, rgba(66, 133, 244, 0.3));
+    }
+
+    .input-error {
+      color: #d32f2f;
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-height: 1em;
+      margin-top: 0.3rem;
+    }
+
+    /* Layout adjustments */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 4fr 2fr;
+      gap: 1.5rem;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+
+    /* Tab styles */
+    #xpathTabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+/* 
+    #xpathTabs .btn {
+      background-color: var(--tab-inactive, #e9ecef);
+      color: var(--tab-text, #495057);
+    }
+
+    #xpathTabs .btn.active {
+      background-color: var(--primary-color, #4285f4);
+      color: white;
+    } */
+  </style>
 </head>
 
 <body>
   <header class="app-header">
     <h1 id="projectTitle">Project Title</h1>
+    <button onclick="window.history.back()" class="btn">Back</button>
   </header>
 
   <main class="main-content">
     <div class="bento-grid">
       <div id="url-box" class="bento-box">
         <h2><i class="fas fa-link"></i> Target URL</h2>
-        <div style="display: flex; gap: 0.7rem; align-items: center;">
+        <form>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <div style="flex: 1;">
+              <input type="text" id="urlInput" placeholder="Enter a URL to scrape">
+              <div id="urlInputError" class="input-error" aria-live="polite"></div>
+            </div>
+            <button id="getXpathsBtn" class="btn"><i class="fas fa-code"></i> Get XPaths</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="creds-box" class="bento-box">
+        <h2><i class="fas fa-shield-alt"></i> Credentials (Optional)</h2>
+        <form>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <div style="flex: 1;">
+              <input type="text" id="username" placeholder="Username">
+              <div id="usernameError" class="input-error" aria-live="polite"></div>
+            </div>
+            <div style="flex: 1;">
+              <input type="password" id="password" placeholder="Password">
+              <div id="passwordError" class="input-error" aria-live="polite"></div>
+            </div>
+            <button id="saveCredsBtn" class="btn"><i class="fas fa-lock"></i> Save</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="xpaths-box" class="bento-box full-width" style="display: none;">
+        <h2><i class="fas fa-stream"></i> Extracted XPaths</h2>
+        <div id="xpathTabs">
+          <button class="btn active" id="tabTextFields">Text Fields</button>
+          <button class="btn" id="tabInputFields">Input Fields</button>
+          <button class="btn" id="tabButtons">Buttons</button>
+        </div>
+        <div id="xpathLists">
+          <ul id="textFields"></ul>
+          <ul id="inputFields" style="display: none;"></ul>
+          <ul id="buttons" style="display: none;"></ul>
+        </div>
+      </div>
+
+      <div id="logs-box" class="bento-box full-width" style="display: none;">
+        <h2><i class="fas fa-terminal"></i> Console Logs</h2>
+        <div id="logOutput">
+          <pre id="logContent"></pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/utils.js"></script>
+  <script src="js/project.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XPath Collector</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header class="app-header">
+    <h1 id="projectTitle">Project Title</h1>
+    <button onclick="window.history.back()" class="btn">Back</button>
+  </header>
+
+  <main class="main-content">
+    <div class="bento-grid">
+      <div id="url-box" class="bento-box">
+        <h2><i class="fas fa-link"></i> Target URL</h2>
+        <div style="display: flex; gap: 0.3rem; align-items: center;">
           <input type="text" id="urlInput" placeholder="Enter a URL to scrape"
-            style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;">
+            style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;" >
           <button id="getXpathsBtn" class="btn btn-success"><i class="fas fa-code"></i> Get XPaths</button>
         </div>
         <div id="urlInputError" class="input-error" aria-live="polite"></div>
@@ -28,7 +188,7 @@
 
       <div id="creds-box" class="bento-box">
         <h4><i class="fas fa-shield-alt"></i> Credentials (Optional)</h4>
-        <div style="display: flex; gap: 0.7rem; align-items: center;">
+        <div style="display: flex; gap: 0.3rem; align-items: center;">
           <input type="text" id="username" placeholder="Username"
             style="flex: 1; font-size: 1rem; padding: 0.7rem 1rem;">
           <input type="password" id="password" placeholder="Password"
@@ -66,4 +226,4 @@
   <script src="js/project.js"></script>
 </body>
 
-</html>
+</html> -->

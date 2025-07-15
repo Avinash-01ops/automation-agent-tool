@@ -156,6 +156,9 @@ body {
 
 
 /* ===================== Input Styles ===================== */
+.m-auto{
+  margin: auto;
+}
 .modal-content form {
   display: flex;
   flex-direction: column;
