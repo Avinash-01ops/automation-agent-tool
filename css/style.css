@@ -1,324 +1,397 @@
 /* ===================== Global Styles ===================== */
+:root {
+  --primary-color: #1976d2;
+  --primary-hover: #1565c0;
+  --success-color: #43a047;
+  --success-hover: #388e3c;
+  --background-color: #f7fafd;
+  --card-background: #ffffff;
+  --text-color: #222222;
+  --subtle-text: #555555;
+  --border-color: #e3f2fd;
+  --border-hover: #90caf9;
+  --shadow-color: rgba(33, 150, 243, 0.08);
+  --shadow-hover: rgba(33, 150, 243, 0.15);
+  --border-radius: 10px;
+}
+
 body {
   font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
-  background-color: #f9fafa;
-  color: #222;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .app-header {
-  background: #000000;
-  padding: 2rem 4rem;
+  background: #000;
+  padding: 1.5rem 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 3rem;
-  color: #ffffff;
+  font-size: 1.8rem;
+  color: #fff;
 }
 
 .main-content {
-  padding: 4rem;
+  padding: 2rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
+.main-content .header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.heading-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /* ===================== Button Styles ===================== */
 .btn {
-  padding: 0.5rem 1.1rem;
-  background: #1976d2;
-  border: #1976d2 1.5px solid;
+  padding: 5px;
+  background: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
-  display: inline-flex;
+  font-size: 0.7rem;
+  height: 30px;
+  transition: all 0.2s ease-in-out;
   align-items: center;
-  gap: 0.1rem;
+  text-align: center;
+  width: 100px;
+  box-shadow: 0 2px 8px var(--shadow-color);
 }
+
 .btn:hover {
-  background: #1565c0;
-  color: #fff;
-  border: #1565c0 1.5px solid;
-  box-shadow: 0 2px 8px rgba(25,118,210,0.10);
-}
-.btn-success {
-  background: #5db6fe;
-  border: #5db6fe 1.5px solid;
-  color: #fff;
-}
-.btn-success:hover {
-  background: #2b9cf9;
-  border: #2b9cf9 1.5px solid;
-}
-/* Project Card Button Styles */
-.project-tile button,
-.project-tile .btn {
-  background: #5db6fe;
-  color: #fff;
-  border: #5db6fe 1.5px solid;
-  border-radius: 5px;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0.45rem 1.1rem;
-  margin-right: 0.5rem;
-  margin-top: 0.5rem;
-  transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s;
-}
-.project-tile button:last-child,
-.project-tile .btn:last-child {
-  margin-right: 0;
-}
-.project-tile button:hover,
-.project-tile .btn:hover {
-  background: #2b9cf9;
-  color: #fff;
-  border: #2b9cf9 1.5px solid;
-  box-shadow: 0 2px 8px rgba(93,182,254,0.10);
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: 0 4px 12px var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
+/* .btn-success {
+  background: var(--success-color);
+  border-color: var(--success-color);
+} */
 
+/* .btn-success:hover {
+  background: var(--success-hover);
+  border-color: var(--success-hover);
+} */
+
+
+/* ===================== Projects Grid ===================== */
 .projects-container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.projects-container.empty {
+  display: block;
+  text-align: center;
+  padding: 4rem;
+  color: var(--subtle-text);
 }
 
 
 /* ===================== Modal Styles ===================== */
-.modal.hidden {
-  display: none;
-}
-
-
-.modal-content {
-  background: #fff;
-  padding: 2rem 2.2rem 2rem 2.2rem;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 400px;
-  position: relative;
-  margin: 0 auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1.4rem;
-  justify-content: center;
-  z-index: 2100;
-}
-
-
-.close-btn {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #888;
-}
-
-
-/* ===================== Input Styles ===================== */
-.modal-content label {
-  font-size: 0.98rem;
-  margin-bottom: 0.1rem;
-  color: #333;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-.modal-content input[type="text"],
-.modal-content textarea {
-  padding: 0.7rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  margin-bottom: 0.5rem;
-  background: #fafbfc;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-.modal-content input[type="text"]:focus,
-.modal-content textarea:focus {
-  outline: none;
-  border-color: #4285f4;
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.13);
-}
-.input-error {
-  color: #d32f2f;
-  font-size: 0.98rem;
-  margin-top: 0.3rem;
-  font-weight: 500;
-  min-height: 1.1em;
-}
-
 .modal {
-  position: relative;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  padding: 0 2vw;
+  z-index: 2000;
+  padding: 1rem;
 }
-/* Project Card Styles */
-.project-tile {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 1.2rem 1rem 1rem 1rem;
-  width: 240px;
-  min-height: 120px;
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card-background);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  transition: box-shadow 0.2s, border 0.2s;
+  gap: 1rem;
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: center;
+  margin: 0 0 0.5rem 0;
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+
+/* ===================== Input Styles ===================== */
+.m-auto{
+  margin: auto;
+}
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-content label {
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+  color: var(--subtle-text);
+  font-weight: 600;
+}
+
+.modal-content input[type="text"],
+.modal-content textarea {
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  width: 100%;
+  background: #fdfdfd;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--shadow-color);
+}
+
+.input-error {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 1em;
+}
+
+.form-footer {
+  margin: auto;
+}
+
+/* ===================== Bento Grid for Project Page ===================== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  /* background-color: #555555; */
+}
+
+.bento-box {
+  background: var(--card-background);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  /* box-shadow: 0 2px 8px var(--shadow-color); */
+  transition: all 0.2s ease-in-out;
+}
+
+.bento-box:hover {
+  /* box-shadow: 0 6px 18px var(--shadow-hover); */
+  border-color: var(--border-hover);
+}
+
+.bento-box.full-width {
+  grid-column: 1 / -1;
+}
+
+.bento-box h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  color: var(--primary-color);
+}
+
+/* Specific grid item styling */
+#url-box {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+#creds-box {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+#xpaths-box {
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+}
+
+#logs-box {
+  grid-column: 1 / 3;
+  grid-row: 3 / 4;
+}
+
+
+/* ===================== XPath Section Styles ===================== */
+#xpathTabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1.5px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+#xpathTabs .btn {
+  background: transparent;
+  color: var(--subtle-text);
+  border: 1.5px solid transparent;
+  box-shadow: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+
+#xpathTabs .btn.active {
+  color: var(--primary-color);
+  border-bottom: 1.5px solid var(--primary-color);
+  border-radius: 0;
+}
+
+#xpathLists ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#xpathLists li {
+  padding: 0.8rem 0;
+  border-bottom: 1.5px solid var(--border-color);
+  font-size: 0.95rem;
+}
+
+#xpathLists li:last-child {
+  border-bottom: none;
+}
+
+#xpathLists code {
+  color: var(--primary-color);
+  background: #e3f2fd;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+}
+
+/* Log Output */
+#logOutput {
+  font-family: 'Fira Code', monospace;
+  background: #1e1e1e;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  max-height: 400px;
+  overflow: auto;
+}
+
+#logOutput strong {
+  color: #e0e0e0;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+#logContent {
+  white-space: pre-wrap;
+  color: #d4d4d4;
+  font-size: 0.9rem;
+}
+
+
+/* ===================== Project Card Styles ===================== */
+.project-tile {
+  background: var(--card-background);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  /* box-shadow: 0 2px 8px var(--shadow-color); */
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .project-tile:hover {
-  box-shadow: 0 6px 18px rgba(33,150,243,0.10);
-  border: 1.5px solid #90caf9;
+  transform: translateY(-4px);
+  /* box-shadow: 0 6px 18px var(--shadow-hover); */
+  border-color: var(--border-hover);
 }
 
 .project-tile h3 {
-  margin: 0 0 0.3em 0;
-  font-size: 1.2rem;
-  color: #1976d2;
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 .project-tile p {
   margin: 0;
-  color: #444;
-  font-size: 0.98rem;
-}
-
-.modal.hidden {
-  display: none;
-}
-
-.modal-content {
-  background: #fff;
-  padding: 2rem 2.2rem 2rem 2.2rem;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 400px;
-  position: relative;
-  margin: 0 auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 1.4rem;
-  justify-content: center;
-  z-index: 2100;
-}
-
-
-.close-btn {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #888;
-}
-
-.modal-content h2 {
-  margin-bottom: 0.7rem;
-  font-size: 1.18rem;
-  font-weight: 600;
-  color: #222;
-  text-align: center;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
-
-.form-group {
-  margin-bottom: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
-}
-
-.modal-content label {
-  font-size: 0.98rem;
-  margin-bottom: 0.1rem;
-  color: #333;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
-.modal-content input[type="text"],
-  .modal-content textarea {
-  padding: 0.7rem 1rem;
+  color: var(--subtle-text);
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 100%;
-  margin-bottom: 0.5rem;
-  background: #fafbfc;
-  transition: border 0.2s, box-shadow 0.2s;
+  flex-grow: 1;
+  /* This pushes the buttons to the bottom */
 }
 
-.modal-content input[type="text"]:focus,
-.modal-content textarea:focus {
-  outline: none;
-  border-color: #4285f4;
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.13);
-}
-
-
-/* ===================== Spinner Animation ===================== */
-@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
-.modal-content .input-row {
+.project-tile .btn-row {
+  margin-top: 1rem;
   display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  /* Aligns buttons to the right */
 }
 
-
-
-.input-row {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-  flex-wrap: wrap;
+/* Custom styling for buttons within the project card */
+.project-tile .btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
 }
 
-.xpath-section {
-  margin-top: 2rem;
+.project-tile .btn-delete {
+  background-color: #ef5350;
+  /* A distinct color for delete */
+  border-color: #ef5350;
 }
 
-.xpath-grid {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.xpath-card {
-  flex: 1;
-  min-width: 250px;
-  background: #f6f6f6;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-}
-
-.xpath-card h3 {
-  margin-top: 0;
-  color: #222222;
-}
-.xpath-card p {
-  margin: 0.5rem 0;
+.project-tile .btn-delete:hover {
+  background-color: #d32f2f;
+  border-color: #d32f2f;
 }
