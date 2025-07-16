@@ -93,6 +93,14 @@ document.getElementById("getXpathsBtn").addEventListener("click", async () => {
     const data = await response.json();
     setLoading(false);
 
+    // Debug: Log the full backend response and xpaths array
+    console.log("[DEBUG] Backend response:", data);
+    if (data && data.xpaths) {
+      console.log(`[DEBUG] xpaths array (${data.xpaths.length}):`, data.xpaths);
+    } else {
+      console.warn("[DEBUG] No xpaths array in response or it is empty.");
+    }
+
     if (data.error) {
       showError("urlInput", data.error);
       logBox.textContent = "❌ Error: " + data.error;
@@ -100,31 +108,73 @@ document.getElementById("getXpathsBtn").addEventListener("click", async () => {
       return;
     }
 
-    logBox.textContent = `✅ Scraping complete. Found ${data.xpaths.length} elements.\n`;
+    logBox.textContent = `✅ Scraping complete. Found ${data.xpaths && data.xpaths.length ? data.xpaths.length : 0} elements.\n`;
     logBox.textContent += data.logs ? `📄 Page Preview:\n${data.logs}\n` : '';
     logsBox.style.display = "block";
 
-    const categories = { textFields: [], inputFields: [], buttons: [] };
-    data.xpaths.forEach(item => {
-        if (item.category === 'Text Field' || item.category === 'Text') categories.textFields.push(item);
-        else if (item.category === 'Input Field' || item.category === 'Input') categories.inputFields.push(item);
-        else if (item.category === 'Button') categories.buttons.push(item);
-    });
-
-    const renderList = (arr) => arr.length
-      ? arr.map(e => `<li><p>${e.name || e.html}</p><code>${e.xpath}</code></li>`).join("")
-      : "<li>No items found in this category.</li>";
-      
-    document.getElementById("textFields").innerHTML = renderList(categories.textFields);
-    document.getElementById("inputFields").innerHTML = renderList(categories.inputFields);
-    document.getElementById("buttons").innerHTML = renderList(categories.buttons);
-    
-    const hasAnyXPaths = Object.values(categories).some(arr => arr.length > 0);
-    if(hasAnyXPaths) {
-        xpathsBox.style.display = "block";
-        // Default to first tab
-        switchTab('textFields');
+    // Organize by all categories
+    const categories = {
+      'Text Box': [],
+      'Text Area': [],
+      'Button': [],
+      'Submit Button': [],
+      'Reset Button': [],
+      'Checkbox': [],
+      'Radio Button': [],
+      'Dropdown': [],
+      'Dropdown Option': [],
+      'Link': [],
+      'Image': [],
+      'Table': [],
+      'Table Row': [],
+      'Table Cell': [],
+      'Frame/Iframe': [],
+      'Modal Dialog': [],
+      'Slider': [],
+      'Tabs': [],
+      'Tab': [],
+      'Tab Panel': [],
+      'Tooltip': [],
+      'Menu': [],
+      'Navigation Bar': [],
+      'Pagination Control': [],
+      'Progress Bar': [],
+      'Auto-complete Field': [],
+      'File Upload': [],
+      'Hidden Field': [],
+      'Form Validation Message': [],
+      'Dynamic Element': [],
+      'Text Field': [],
+      'Other': []
+    };
+    if (data.xpaths && Array.isArray(data.xpaths)) {
+      data.xpaths.forEach(item => {
+        if (categories[item.category]) categories[item.category].push(item);
+        else categories['Other'].push(item);
+      });
     }
+
+    // Render all categories in the UI
+    const categoryOrder = Object.keys(categories);
+    let htmlSections = '';
+    categoryOrder.forEach(cat => {
+      if (categories[cat].length) {
+        htmlSections += `<h3 style=\"margin-top:2rem;color:var(--subtle-text);font-size:1.1rem;font-weight:600;\">${cat}</h3><ul style=\"margin-bottom:1.5rem;\">`;
+        htmlSections += categories[cat].map(e => `
+          <li>
+            <div style=\"display:flex;flex-direction:column;gap:0.2rem;\">
+              <span style=\"color:var(--subtle-text);font-size:0.98rem;\"><strong>${e.name || e.tag || 'Element'}</strong></span>
+              <span style=\"color:#888;font-size:0.92rem;\">XPath: <code>${e.xpath}</code></span>
+              ${e.id ? `<span style='color:#888;font-size:0.92rem;'>ID: <code>${e.id}</code></span>` : ''}
+              ${e.class ? `<span style='color:#888;font-size:0.92rem;'>Class: <code>${e.class}</code></span>` : ''}
+              ${e.selectors && e.selectors.length ? `<span style='color:#888;font-size:0.92rem;'>Selectors: <code>${e.selectors.join(' | ')}</code></span>` : ''}
+            </div>
+          </li>
+        `).join('');
+        htmlSections += '</ul>';
+      }
+    });
+    document.getElementById("xpathLists").innerHTML = htmlSections;
 
   } catch (err) {
     setLoading(false);
@@ -135,10 +185,12 @@ document.getElementById("getXpathsBtn").addEventListener("click", async () => {
 });
 
 // Tab switching logic
+
 const tabs = {
     textFields: document.getElementById('tabTextFields'),
     inputFields: document.getElementById('tabInputFields'),
-    buttons: document.getElementById('tabButtons')
+    buttons: document.getElementById('tabButtons'),
+    others: document.getElementById('tabOthers')
 };
 
 function switchTab(activeTab) {
@@ -152,6 +204,7 @@ function switchTab(activeTab) {
 tabs.textFields.onclick = () => switchTab('textFields');
 tabs.inputFields.onclick = () => switchTab('inputFields');
 tabs.buttons.onclick = () => switchTab('buttons');
+tabs.others.onclick = () => switchTab('others');
 
 
 /**

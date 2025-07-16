@@ -98,7 +98,7 @@
               <input type="text" id="urlInput" placeholder="Enter a URL to scrape">
               <div id="urlInputError" class="input-error" aria-live="polite"></div>
             </div>
-            <button id="getXpathsBtn" class="btn"><i class="fas fa-code"></i> Get XPaths</button>
+          <button id="getXpathsBtn" class="btn" type="button"><i class="fas fa-code"></i> Get XPaths</button>
           </div>
         </form>
       </div>
@@ -126,11 +126,13 @@
           <button class="btn active" id="tabTextFields">Text Fields</button>
           <button class="btn" id="tabInputFields">Input Fields</button>
           <button class="btn" id="tabButtons">Buttons</button>
+          <button class="btn" id="tabOthers">Other</button>
         </div>
         <div id="xpathLists">
           <ul id="textFields"></ul>
           <ul id="inputFields" style="display: none;"></ul>
           <ul id="buttons" style="display: none;"></ul>
+          <ul id="others" style="display: none;"></ul>
         </div>
       </div>
 

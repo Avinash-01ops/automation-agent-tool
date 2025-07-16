@@ -3,37 +3,17 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
-import 'dotenv/config'; // Load environment variables from .env file
+require('dotenv').config(); // Load environment variables from .env file
 
-// ===================== Hugging Face AI Categorization Utility =====================
-const HF_API_URL = 'https://api-inference.huggingface.co/models/bhadresh-savani/distilbert-base-uncased-emotion'; // or your model
-const HF_API_KEY = process.env.HF_API_KEY;
 
-/**
- * Get a category label from Hugging Face AI for a given HTML string.
- * @param {string} html - The HTML content to categorize
- * @returns {Promise<string>} - The predicted label or 'Uncategorized'
- */
-async function getCategoryFromAI(html) {
-  try {
-    const response = await axios.post(
-      HF_API_URL,
-      { inputs: html },
-      {
-        headers: {
-          Authorization: `Bearer ${HF_API_KEY}`
-        }
-      }
-    );
-
-    // Check format and return label
-    const label = response.data?.[0]?.label || 'Uncategorized';
-    return label;
-
-  } catch (err) {
-    console.error('[AI Error]', err.message);
-    return 'Uncategorized';
-  }
+// ===================== Simple JS Categorization Utility =====================
+function categorizeElement(tag, type, html) {
+  if (tag === 'button' || (tag === 'input' && type === 'button')) return 'Button';
+  if (tag === 'input' && (!type || type === 'text' || type === 'password' || type === 'email')) return 'Input Field';
+  if (tag === 'textarea') return 'Input Field';
+  if (tag === 'a') return 'Text Field';
+  if (tag === 'label' || tag === 'span' || tag === 'p' || tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4' || tag === 'h5' || tag === 'h6' || tag === 'div') return 'Text Field';
+  return 'Other';
 }
 
 // ✅ Stealth Puppeteer Setup
@@ -63,12 +43,13 @@ app.post('/api/scrape-xpaths', async (req, res) => {
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-
     // ✅ Extract XPaths, HTML, and AI Category
     const elements = await page.$$('*');
     const xpaths = [];
+    let aiErrors = 0;
 
-    for (let el of elements.slice(0, 20)) {
+
+    for (let el of elements.slice(0, 100)) {
       const data = await page.evaluate(el => {
         function getXPath(el) {
           const idx = (sib, name) =>
@@ -87,20 +68,32 @@ app.post('/api/scrape-xpaths', async (req, res) => {
                   `${el.localName.toLowerCase()}[${idx(el)}]`
                 ];
 
-          return { xpath: segs(el).join('/'), html: el.outerHTML };
+          // Compose a name for display
+          let name = el.localName.toLowerCase();
+          if (el.id) name += `#${el.id}`;
+          if (el.name) name += `[name='${el.name}']`;
+          if (el.type) name += `[type='${el.type}']`;
+          if (el.innerText && el.innerText.trim().length > 0 && el.innerText.trim().length < 40) name += `: ${el.innerText.trim()}`;
+
+          return {
+            xpath: segs(el).join('/'),
+            html: el.outerHTML,
+            tag: el.localName.toLowerCase(),
+            type: el.type || '',
+            name
+          };
         }
         return getXPath(el);
       }, el);
 
-      const category = await getCategoryFromAI(data.html);
+      const category = categorizeElement(data.tag, data.type, data.html);
       xpaths.push({ ...data, category });
     }
 
-
-
     await browser.close();
 
-    return res.json({ xpaths });
+    const logs = `Scraped ${xpaths.length} elements from ${url}. AI errors: ${aiErrors}`;
+    return res.json({ xpaths, logs });
 
   } catch (err) {
     console.error('[Scraping Failed]', err.message);
